@@ -26,16 +26,17 @@ public class LibreriaMenu extends MainMenu {
 
             limpiarPantalla();
             //menu 
-                 System.out.println((char) 27 + "\n\033[36m\t\t\t\tLibreria\n");
+            System.out.println((char) 27 + "\n\033[36m\t\t\t\tLibreria\n");
 
             do {
 
                 System.out.println((char) 27 + "\n\033[36m••Que desea hacer?\n");
                 System.out.println((char) 27 + "[36m1: \033[0mIngresar un nuevo libro");
                 System.out.println((char) 27 + "[36m2: \033[0mModificar un libro existente");
-                System.out.println((char) 27 + "[36m3: \033[0mVer un libro en espepcifico para disponibilidad y retiro");
-                System.out.println((char) 27 + "[36m4: \033[0mVer todos los libros dispoibles");
-                System.out.println((char) 27 + "[36m5: \033[0mVer todos los libros con y sin disponibilidad");
+                System.out.println((char) 27 + "[36m3: \033[0mVer un libro en espepcifico");
+                System.out.println((char) 27 + "[36m4: \033[0mRetirar un libro");
+                System.out.println((char) 27 + "[36m5: \033[0mVer todos los libros dispoibles");
+                System.out.println((char) 27 + "[36m6: \033[0mVer todos los libros con y sin disponibilidad");
                 System.out.println((char) 27 + "[36m00: \033[0mVolver");
                 System.out.print("» ");
                 opcion = leer.nextInt();
@@ -57,12 +58,16 @@ public class LibreriaMenu extends MainMenu {
                     case 3:
                         buscarLibroPorTiutlo();
                         break;
-
                     case 4:
-                        serv.mostrarTodosLosLibrosDisponibles();
+                        retirarLibro();
+
                         break;
 
                     case 5:
+                        serv.mostrarTodosLosLibrosDisponibles();
+                        break;
+
+                    case 6:
                         serv.mostrarTodosLosLibros();
                         break;
 
@@ -107,78 +112,88 @@ public class LibreriaMenu extends MainMenu {
 
         //busca todos los libros con el mismo titulo,
         //retorna la lista de todos los Libros con el mismo nombre
-        List<Libro> libro = serv.disponibilidadDeUnLibro(titulo);
+        Libro libro = serv.disponibilidadDeUnLibro(titulo);
 
-        if (libro == null) {
+        try {
+            if (libro == null) {
+                
 
-        } else {
-            //retiro de un libro
-            System.out.print("Desea retirar uno?\n» ");
-            String retiro = leer.next().toLowerCase();
+            } else {
+                //retiro de un libro
+                System.out.print("Desea retirar uno?\n» ");
+                String retiro = leer.next().toLowerCase();
 
-            // Codigo para retirar uno, y cambiar los atributos del libro
-            if (retiro.contains("s")) {
-                //Lo seleccionamos por ID para hacerlo mas efficiente
-                System.out.println("Cual desea retirar? ingrese el ID del libro por favor:");
-                String idLibroRetirar = leer.next();
+                // Codigo para retirar uno, y cambiar los atributos del libro
+                if (retiro.contains("s")) {
+                    
 
-                // for each para evaluar cada ID de cada libro en la lista (porque todos tienen el mismo nombre) 
-                for (Libro libro1 : libro) {
+                    // for each para evaluar cada ID de cada libro en la lista (porque todos tienen el mismo nombre) 
+                    for (Libro libro1 : libro) {
 
-                    // if statement para seleccionar el libro que quiere retirar el  usuario
-                    if (libro1.getId() == null ? idLibroRetirar == null : libro1.getId().equals(idLibroRetirar)) {
+                        // if statement para seleccionar el libro que quiere retirar el  usuario
+                        if (libro1.getId() == null ? idLibroRetirar == null : libro1.getId().equals(idLibroRetirar)) {
 
-                        //si no quedan mas libros disponibles le decimos al usuario y salimos del metodo
-                        if (libro1.getEjemplaresRestantes() == 0) {
-                            System.out.println("Lo lamentamos, no esta disponible el libro \"" + libro1.getTitulo() + "\", han sido retirados todos ");
-                        }
-
-                        //le decimos cual libro ha seleccionado
-                        System.out.println("Ha elegido el libro \"" + libro1.getTitulo() + "\" ID: " + libro1.getId());
-                        // por defecro, por si deasea ingresar u numero negativo, el retiro va a ser 1
-                        int cantidadARetirar = 1;
-
-                        // try and catch para ver cuantos libros quiere retirar 
-                        try {
-
-                            //cuantos a retirar
-                            System.out.print("Cuantos desea retirar? puede retirar la candidad de : " + libro1.getEjemplaresRestantes() + "\n»");
-                            cantidadARetirar = leer.nextInt();
-
-                            // basoluto para que no ingrese negativos
-                            cantidadARetirar = Math.abs(cantidadARetirar);
-
-                            //SI ingresa un numero mayor larga la excepcion y le asigna 1
-                            if (libro1.getEjemplaresRestantes() < cantidadARetirar) {
-                                cantidadARetirar = 1;
-                                throw new Exception();
+                            //si no quedan mas libros disponibles le decimos al usuario y salimos del metodo
+                            if (libro1.getEjemplaresRestantes() == 0) {
+                                System.out.println("Lo lamentamos, no esta disponible el libro \"" + libro1.getTitulo() + "\", han sido retirados todos ");
                             }
 
-                        } catch (Exception e) {
-                            System.out.println("Lo lamentamos, no puede retirar esa cantidad de libros. Por defecto le asignamos 1");
+                            //le decimos cual libro ha seleccionado
+                            System.out.println("Ha elegido el libro \"" + libro1.getTitulo() + "\" ID: " + libro1.getId());
+                            // por defecro, por si deasea ingresar u numero negativo, el retiro va a ser 1
+                            int cantidadARetirar = 1;
 
+                            // try and catch para ver cuantos libros quiere retirar 
+                            try {
+
+                                //cuantos a retirar
+                                System.out.print("Cuantos desea retirar? puede retirar la candidad de : " + libro1.getEjemplaresRestantes() + "\n»");
+                                cantidadARetirar = leer.nextInt();
+
+                                // basoluto para que no ingrese negativos
+                                cantidadARetirar = Math.abs(cantidadARetirar);
+
+                                //SI ingresa un numero mayor larga la excepcion y le asigna 1
+                                if (libro1.getEjemplaresRestantes() < cantidadARetirar) {
+                                    cantidadARetirar = 1;
+                                    throw new Exception();
+                                }
+
+                            } catch (Exception e) {
+                                System.out.println("Lo lamentamos, no puede retirar esa cantidad de libros. Por defecto le asignamos 1");
+
+                            }
+
+                            //aca le asignamos los nuevbos atributos de los ejemplares prestados y restestantes
+                            libro1.setEjemplaresPrestados(libro1.getEjemplaresPrestados() + cantidadARetirar);
+                            libro1.setEjemplaresRestantes(libro1.getEjemplaresRestantes() - cantidadARetirar);
+
+                            //si no hay libros restantes le cambiamos la disponibilidad
+                            if (libro1.getEjemplaresRestantes() == 0) {
+                                libro1.setAlta(Boolean.FALSE);
+                            }
+
+                            // guardamos los cambios del objeto
+                            serv.guardarCambios(libro1);
+
+                            // salimos del bucle y nuevamente al menu
+                            break;
                         }
-
-                        //aca le asignamos los nuevbos atributos de los ejemplares prestados y restestantes
-                        libro1.setEjemplaresPrestados(libro1.getEjemplaresPrestados() + cantidadARetirar);
-                        libro1.setEjemplaresRestantes(libro1.getEjemplaresRestantes() - cantidadARetirar);
-
-                        //si no hay libros restantes le cambiamos la disponibilidad
-                        if (libro1.getEjemplaresRestantes() == 0) {
-                            libro1.setAlta(Boolean.FALSE);
-                        }
-
-                        // guardamos los cambios del objeto
-                        serv.guardarCambios(libro1);
-
-                        // salimos del bucle y nuevamente al menu
-                        break;
                     }
-                }
 
-            }// fin for each
+                }// fin for each
 
-        }// fin if statement
+            }// fin if statement
+        } catch (NullPointerException e) {
+            System.out.println("Ingreso un ID invalido.");
+        } catch (SQLException ex) {
+            System.out.println("Error SQL : " + ex);
+
+        } catch (Exception exception) {
+            System.out.println("Error : " + exception);
+            System.out.println("Stacktrace : " + Arrays.toString(exception.getStackTrace()));
+
+        }
 
     }
 
@@ -196,7 +211,7 @@ public class LibreriaMenu extends MainMenu {
         Libro libro = serv.editarLibro(id);
 
         System.out.print("Titulo de Libro : \n» ");
-        String titulo = leer.next();
+        String titulo = leer.next().trim();
 
         System.out.print("El codigo de barra del libro\n» ");
         Long isbn = leer.nextLong();
@@ -207,13 +222,82 @@ public class LibreriaMenu extends MainMenu {
         System.out.print("Cuantos libros ingresa?\n» ");
         Integer ejemplares = leer.nextInt();
 
+        System.out.print("Cuantos libros han sido prestados?\n» ");
+        Integer prestados = leer.nextInt();
+
+        if (ejemplares < prestados) {
+            System.out.println("No puede haber prestado mas que lo ingresado, volviendo al menu principal");
+            return;
+        }
+
         libro.setTitulo(titulo);
         libro.setIsbn(isbn);
         libro.setAnio(anio);
         libro.setEjemplares(ejemplares);
+        libro.setEjemplaresRestantes(ejemplares - prestados);
+        libro.setEjemplaresPrestados(prestados);
 
         serv.guardarCambioEditado(libro);
 
     }
 
+    private static void retirarLibro() throws SQLException, Exception {
+
+        serv.mostrarTodosLosLibrosDisponibles();
+        System.out.println("Cual desea retirar? ingrese el ID del libro por favor:");
+        String idLibroRetirar = leer.next();
+        List<Libro> libro = serv.disponibilidadDeUnLibro(idLibroRetirar);
+
+// for each para evaluar cada ID de cada libro en la lista (porque todos tienen el mismo nombre) 
+        for (Libro libro1 : libro) {
+
+            // if statement para seleccionar el libro que quiere retirar el  usuario
+            if (libro1.getId() == null ? idLibroRetirar == null : libro1.getId().equals(idLibroRetirar)) {
+
+                //si no quedan mas libros disponibles le decimos al usuario y salimos del metodo
+                if (libro1.getEjemplaresRestantes() == 0) {
+                    System.out.println("Lo lamentamos, no esta disponible el libro \"" + libro1.getTitulo() + "\", han sido retirados todos ");
+                }
+
+                //le decimos cual libro ha seleccionado
+                System.out.println("Ha elegido el libro \"" + libro1.getTitulo() + "\" ID: " + libro1.getId());
+                // por defecro, por si deasea ingresar u numero negativo, el retiro va a ser 1
+                int cantidadARetirar = 1;
+
+                // try and catch para ver cuantos libros quiere retirar 
+                try {
+
+                    //cuantos a retirar
+                    System.out.print("Cuantos desea retirar? puede retirar la candidad de : " + libro1.getEjemplaresRestantes() + "\n»");
+                    cantidadARetirar = leer.nextInt();
+
+                    // basoluto para que no ingrese negativos
+                    cantidadARetirar = Math.abs(cantidadARetirar);
+
+                    //SI ingresa un numero mayor larga la excepcion y le asigna 1
+                    if (libro1.getEjemplaresRestantes() < cantidadARetirar) {
+                        cantidadARetirar = 1;
+                        throw new Exception();
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Lo lamentamos, no puede retirar esa cantidad de libros. Por defecto le asignamos 1");
+
+                }
+
+                //aca le asignamos los nuevbos atributos de los ejemplares prestados y restestantes
+                libro1.setEjemplaresPrestados(libro1.getEjemplaresPrestados() + cantidadARetirar);
+                libro1.setEjemplaresRestantes(libro1.getEjemplaresRestantes() - cantidadARetirar);
+
+                //si no hay libros restantes le cambiamos la disponibilidad
+                if (libro1.getEjemplaresRestantes() == 0) {
+                    libro1.setAlta(Boolean.FALSE);
+                }
+
+                // guardamos los cambios del objeto
+                serv.guardarCambios(libro1);
+
+            }
+        }
+    }
 }

@@ -42,6 +42,7 @@ public class MainMenu {
                     case 00:
                         System.out.println("\t\tMuchas gracias! Hasta que vuelvas nuevamente!");
                         System.out.println("\n\t\t\t\tSaludos de la Libreria!!");
+                        salida = false;
                         break;
 
                     case 1:
@@ -49,6 +50,8 @@ public class MainMenu {
                         break;
 
                 }
+                
+                
 
             } while (salida);
 
