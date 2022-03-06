@@ -114,25 +114,24 @@ public class LibroServicio {
         try {
 
             // busca los libros por titulos
-            List <Libro>libros = dao.buscaPorTitulo(titulo);
+            List<Libro> libros = dao.buscaPorTitulo(titulo);
 
             if (libros == null) {
                 System.out.println("No encontramos el libro que busca");
             } else {
                 System.out.println("Estos son los libros que tenemos disponible:");
-                libros.forEach((_item) -> {
+                libros.forEach((_itemX) -> {
                     System.out.println(libros.toString());
                 });
             }
-             Libro libro = null;
+            Libro libro = null;
             for (int i = 0; i < libros.size(); i++) {
                 if (libros.get(i).getTitulo().equals(titulo)) {
                     libro = libros.get(i);
                     break;
                 }
             }
-            
-            
+
             return libro;
         } catch (NullPointerException e) {
             System.out.println("NullPointerException");
